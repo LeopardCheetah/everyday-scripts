@@ -1,0 +1,6 @@
+__pycache__/
+day_recaps/
+
+# this is my development file
+# essentially equivalent to time_tracker.py (but less refined)
+devdev.py
