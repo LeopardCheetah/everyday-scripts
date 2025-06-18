@@ -9,7 +9,7 @@ lp_b = '->'
 lp_c = '->'
 lp_d = '><>'
 lp_e = '=>'
-lp_f = 'o>'
+lp_f = '-[>'
 
 # p = prompt
 p_a = 'What notable things were done today?'

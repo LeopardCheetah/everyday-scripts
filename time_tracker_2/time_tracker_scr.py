@@ -1,8 +1,9 @@
 from datetime import date
 import os
 
-import tt
-
+# for those pulling from code base use this import
+# import tt
+import devdev as tt
 
 ############################
 # see the script file to actually change prompt defaults and such
