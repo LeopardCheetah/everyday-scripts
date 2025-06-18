@@ -1,5 +1,5 @@
 # from time-tracker-2
-
+tt_scr_devfile.py
 __pycache__/
 day_recaps/
 
@@ -8,4 +8,3 @@ day_recaps/
 devdev.py
 
 # for testing
-time-tracker-2/
