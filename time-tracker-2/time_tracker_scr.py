@@ -29,6 +29,8 @@ if t.tm_mday < 10:
     d += '0'
 d += str(t.tm_mday)
 
+t_formatted = time.strftime(d+" %H:%M:%S", time.localtime())
+
 
 path = f'day_recaps/{d}.txt' # change this to wherever you want to store files i guess
 
@@ -38,6 +40,7 @@ if os.path.isfile(path):
 
 with open(path, "w") as f:
     f.write(f'{d}\n')
+    f.write("File made at: "+t_formatted+'\n')
     for _ls in to_write:
         f.write('--------------------------------------' + '\n')
         for _l in _ls:
