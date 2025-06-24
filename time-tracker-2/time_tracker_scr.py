@@ -29,7 +29,19 @@ if t.tm_mday < 10:
     d += '0'
 d += str(t.tm_mday)
 
-t_formatted = time.strftime(d+" %H:%M:%S", time.localtime())
+
+
+t_written = time.localtime(time.time())
+
+dx = str(t_written.tm_year) + '-'
+if t_written.tm_mon < 10:
+    dx += '0'
+dx += str(t_written.tm_mon) + '-'
+if t_written.tm_mday < 10:
+    dx += '0'
+dx += str(t_written.tm_mday)
+
+t_formatted = time.strftime(dx+" %H:%M:%S", time.localtime())
 
 
 path = f'day_recaps/{d}.txt' # change this to wherever you want to store files i guess
