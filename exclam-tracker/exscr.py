@@ -113,8 +113,8 @@ th = "Drive"
 # 2 => once two of the same exclam marks are seen, ramp it up
 # e.g. 
 # drive! -> drive! -> drive!! -> drive!! -> drive!!!
-exclam_baseline = [0, 1, 2, 2, 1, 2]
-exclam_ramp_up = [0, 2, 2, 1, 2, 2]
+exclam_baseline = [0, 1, 1, 2, 1, 2]
+exclam_ramp_up = [0, 2, 2, 1, 2, 1]
 
 habits_to_upd = ['', ta, tb, tc, td, te, th]
 
