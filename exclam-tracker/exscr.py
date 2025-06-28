@@ -171,6 +171,9 @@ print('---------------------------------------------------')
 
 
 # write new memory to file
+
+# turns out this is useless as putting 'w' already basically deletes file 
+# whatevs
 os.remove('exmem.txt')
 with open('exmem.txt', 'w') as f:
     # just write
