@@ -141,6 +141,6 @@ big_ls = arxiv_atom_parser(r.text)
 for ls in big_ls:
     print(ls)
     print()
- 
+
 time.sleep(3) # to prevent requests going too fast
 s = 'https://export.arxiv.org/api/query?search_query=cat:math.NT+AND+submittedDate:%5B202506010001+TO+202507070001%5D 200'
