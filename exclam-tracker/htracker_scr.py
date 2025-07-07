@@ -128,6 +128,12 @@ for _idx in range(days_to_cover, 0, -1): # n, n-1, n-2, ..., 1
     
     for _hidx in range(len(habit_logs)):
         # _habit is actually a list so only use the string _habit[0]
+        if type(habit_logs[_hidx]) != type([]):
+            continue # some error
+
+        if len(habit_logs[_hidx]) != 1:
+            continue # some other error?
+
         _hs = habit_logs[_hidx][0]
         _h_name_len = _hs.index(':') 
 
