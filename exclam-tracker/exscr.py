@@ -113,10 +113,10 @@ th = "Drive"
 # 2 => once two of the same exclam marks are seen, ramp it up
 # e.g. 
 # drive! -> drive! -> drive!! -> drive!! -> drive!!!
-exclam_baseline = [0, 0, 0, 2, 0, 1]
+exclam_baseline = [0, 0, 0, 2, 0, 2]
 exclam_ramp_up = [0, 2, 1, 1, 2, 1]
 
-habits_to_upd = ['', ta, tb, tc, td, te, th]
+habits_to_upd = ['', ta, tb, tc, td, te, th] # note: this list and the one above it is kinda disjoint
 
 
 #############################
