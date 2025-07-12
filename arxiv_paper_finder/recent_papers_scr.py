@@ -249,7 +249,11 @@ for _cat in search_categories:
     
     papers_seen.append((_cat, new_papers[0][0]))
 
-os.remove('papers_seen.txt')
+try:
+    os.remove('papers_seen.txt')
+except FileNotFoundError:
+    pass # doesn't matter
+
 with open('papers_seen.txt', 'w') as f:
     for pair in papers_seen:
         f.write(f'{pair[0]} {pair[1]}\n')
