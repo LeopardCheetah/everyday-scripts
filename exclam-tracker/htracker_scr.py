@@ -31,9 +31,6 @@ def get_habit_str(path):
     except:
         return ':(' # path error or whatever
 
-    
-
-
 ############################################
 ############################################
 
@@ -90,7 +87,6 @@ with open('habit_progress.txt', 'r') as _f:
 base_time = time.time()
 days_to_cover = int((base_time - last_written_time) // (24*60*60))
 
-
 # get length of the first x/-/n line of the first habit
 _c = habit_logs[0][0].split(':')[1][1:].index(' ')
 
@@ -124,7 +120,7 @@ for _idx in range(days_to_cover, 0, -1): # n, n-1, n-2, ..., 1
         
         habit_logs[_hidx][0] = _hname + ':' + ' ' + _result
         continue # i think this works!!
-
+    
     
     for _hidx in range(len(habit_logs)):
         # _habit is actually a list so only use the string _habit[0]
@@ -147,15 +143,12 @@ for _idx in range(days_to_cover, 0, -1): # n, n-1, n-2, ..., 1
         else:
             _result = '?' # not sure how you get here but ok
 
-        if _hidx == 1:
-            print(_result)
 
         # part the red sea rq
         _hs = _hs[:_h_name_len + 2] + _result + _hs[_h_name_len + 2:]
 
         if _is_sunday:
-            print(_date)
-            _hs = _hs[:_h_name_len + 3] + ' ' + _hs[_h_name_len + 3:]
+            _hs = _hs[:_h_name_len + 2] + ' ' + _hs[_h_name_len + 2:]
             
         habit_logs[_hidx][0] = _hs
         continue 
