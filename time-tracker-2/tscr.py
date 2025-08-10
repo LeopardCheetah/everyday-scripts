@@ -25,7 +25,10 @@ def clear(): # clears screen
 # the simple and dirty way -- use input()!
 
 #############################################################################
-# user defined variables cuz im fancy now
+# user defined variables
+
+
+
 # lp = line prefix
 lp_a = '>>'
 

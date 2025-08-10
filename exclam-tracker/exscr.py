@@ -82,7 +82,7 @@ for day in range(num_of_prev_days, 0, -1): # n/n-1/.../1 days ago time tracking 
     # as of 08/10/2025 h can now contain:
     # 1 = brush (max: 2)
     # 2 = instrumenting
-    # 3 = reading
+    # 3 = reading/exploring
     # 4 = coding (cp/projects)
     # 5 = mathing (analysis/comp. math)
     # 6 = showering
@@ -100,7 +100,7 @@ for day in range(num_of_prev_days, 0, -1): # n/n-1/.../1 days ago time tracking 
 
 ################
 ################
-tasks = ["[Brush, Brush]", "Instrumenting", "Reading", "proging (CP/Projects)", "Mathing (Analysis/Comp. Math)", "Showering", "Outsiding"]
+tasks = ["[Brush, Brush]", "Instrumenting", "Reading/[Exploring]", "proging (CP/Projects)", "Mathing (Analysis/Comp. Math)", "Showering", "Outsiding"]
 
 # do task i ind i times a day
 # 2 -> this should be done once every 2 days
