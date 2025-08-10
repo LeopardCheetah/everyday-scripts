@@ -7,7 +7,7 @@ import sys
 
 ################
 
-search_categories = ['math.HO', 'math.GM', 'cs.DS', 'cs.GT', 'cs.CC', 'cs.CR', 'math.NT', 'math.FA']
+search_categories = ['math.HO', 'math.GM', 'cs.DS', 'cs.GT', 'cs.CC', 'cs.CR', 'math.NT']
 category_blacklist = ['math.AT', 'math.CT', 'math.GT', 'math.KT', 'math.OA', 'math.RT', 'math.SP']
 max_papers = 7
 base_link = 'https://export.arxiv.org/api/query'
@@ -197,7 +197,8 @@ for _cat in search_categories:
 
     try:
         _r = requests.get(base_link, params=_search_params)
-    except ConnectionError:
+    # TODO -- im not sure if this is valid code to catch all exceptions
+    except ConnectionError or MaxRetryError or NameResolutionError:
         raise InternetConnectivityException("Are you connected to the internet?")
     except Exception as _e:
         print(f'Something is wrong with your arxiv request for parameters {_search_params} on category {_cat}.')

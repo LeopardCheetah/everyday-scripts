@@ -4,7 +4,7 @@ day_recaps/
 
 # this is my development file
 # essentially equivalent to time_tracker.py (but less refined)
-devdev.py
+tscr.py
 
 # more development 
 tt_scr_devfile.py

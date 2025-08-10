@@ -9,8 +9,8 @@ import devdev as tt
 # see the script file to actually change prompt defaults and such
 ############################
 
-# makes it so that if its 1:43am and i do a day recap, the date of the day is still from the previous day
-hour_offset = 2 
+# makes it so that if its 2:43am and i do a day recap, the date of the day is still from the previous day
+hour_offset = 2
 
 #####
 # get the day recap
