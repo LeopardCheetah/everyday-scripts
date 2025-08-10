@@ -8,28 +8,21 @@ def clear():
     print('\033[2J\033[H')
     return 
 
+# does s contain (char) x?
 def contains(s, x):
-    # does s contain x?
-    if len(x) < 1 or len(x) > 1:
+    _x = str(x)
+    if len(_x) < 1 or len(_x) > 1:
         return 'Perhaps'
     
     for i in s:
-        if i == x:
+        if i == _x:
             return True
 
     return False 
 
 # n = how many days ago do you want the date of 
 def get_day(n):
-    t = time.localtime(time.time() - 24*60*60*n)
-    d = str(t.tm_year) + '-'
-    if t.tm_mon < 10:
-        d += '0'
-    d += str(t.tm_mon) + '-'
-    if t.tm_mday < 10:
-        d += '0'
-    d += str(t.tm_mday)
-
+    d = time.strftime("%Y-%m-%d", time.localtime(time.time() - 24*60*60*n))
     return d
 
 # path = path to the script date thing;
@@ -42,7 +35,8 @@ def get_habit_s(path):
                 h = line[3:].strip()
                 break
 
-            if line.strip() != 'Enter how your habits have been: (e.g. abgh, bcefgh)':
+            # remember to sync this with tscr.py
+            if line.strip() != 'Semi-daily habit tracker tracking portion (e.g. 11234567, 346):':
                 continue 
             
             fl = True
@@ -51,135 +45,118 @@ def get_habit_s(path):
     return h
 
 ##############################
-# load from file + update with last night's information
-# format:
-# [task] -x--x-- 3
-# means task was not done 1/3/4/6/7 days ago but was done 2/5 days ago, task had 3 exclam marks as of yesterday
+# 08/10 - rewrite parts of this from scratch + remove whatever file stuff i have going on right now
 
-mem = []
-with open('exmem.txt', 'r') as f:
-    for li in f:
-        a, b, c = li.strip().split()
-        mem.append([a, b, c])
+# which tt days do u wanna take a look at?
+# from 3 days ago? 5? 7?
+num_of_prev_days = 5
 
-for k in range(7, 0, -1): # 7/6/.../1 days ago time tracking scripts
-    path = f'../time-tracker-2/day_recaps/{get_day(k)}.txt'
+num_habits = 7 # manual count
 
-    h = ''
+
+
+# first row == first habit
+# first col == most recent day (hopefully yesterday)
+# e.g. 7x3:
+# 0 1 0
+# 1 1 1 
+# 0 0 1
+# 0 0 1
+# 1 0 1
+# 0 1 1
+# 0 1 0 
+
+arr = [[0 for __ in range(num_of_prev_days)] for _ in range(num_habits)]
+
+
+for day in range(num_of_prev_days, 0, -1): # n/n-1/.../1 days ago time tracking scripts
+    path = f'../time-tracker-2/day_recaps/{get_day(day)}.txt'
+
+    habs = ''
     try:
-        h = get_habit_s(path)
+        habs = get_habit_s(path)
     except:
-        h = ':(' # path error or whatever
+        # path error since file doesn't exist
+        habs = ':(' 
     
+    # as of 08/10/2025 h can now contain:
+    # 1 = brush (max: 2)
+    # 2 = instrumenting
+    # 3 = reading
+    # 4 = coding (cp/projects)
+    # 5 = mathing (analysis/comp. math)
+    # 6 = showering
+    # 7 = outsiding (biking/walking)
 
-    # here h can only have a/b/c/d/e/f/g/h (maybe none!)
-
-    # reminder:
-    # a = brush
-    # b = music related stuff
-    # c = read
-    # d = code smth
-    # e = mathing
-    # f = shwr
-    # g = go outside for a walk
-    # h = drive
-    for c in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']:
-        if contains(h, c):
-            # yippee!
-            mem[ord(c) - ord('a')][1] = 'x' + mem[ord(c) - ord('a')][1][:-1]
+    # wlog assume the 1s are together
+    for c in [1, 2, 3, 4, 5, 6, 7]:
+        if contains(habs, c):
+            # (habit, day num)
+            arr[c - 1][day - 1] = 1
             continue 
-
-        # not yippee
-        mem[ord(c) - ord('a')] [1] = '-' + mem[ord(c) - ord('a')][1][:-1]
 
     # last whatever's tt results have been tracked!
 
 
 ################
 ################
+tasks = ["[Brush, Brush]", "Instrumenting", "Reading", "proging (CP/Projects)", "Mathing (Analysis/Comp. Math)", "Showering", "Outsiding"]
 
-# now that memory has been written in + updated with (presumably) last night's stuff, generate list of tasks (with exclamation marks) to do.
+# do task i ind i times a day
+# 2 -> this should be done once every 2 days
+task_freq = [1, 1, 1, 1, 2, 2, 1]
 
-# taska
-ta = "[Brush, Brush]"
-tb = "Music stuff"
-tc = "Read"
-td = "Code"
-te = "Analysis work" # math
-# f/g not really 'tracked'
-th = "Drive"
+# default ramp up will just be for every 2 days something isn't done, add an exclam
+# x -> Code -> Code -> Code!
+exclam_ramp_up = [2, 2, 2, 2, 2, 2, 2]
 
-
-# 2 => once two of the same exclam marks are seen, ramp it up
-# e.g. 
-# drive! -> drive! -> drive!! -> drive!! -> drive!!!
-exclam_baseline = [0, 0, 0, 2, 0, 2]
-exclam_ramp_up = [0, 2, 1, 1, 2, 1]
-
-habits_to_upd = ['', ta, tb, tc, td, te, th] # note: this list and the one above it is kinda disjoint
 
 
 #############################
 #############################
 
+# carry over arr array
+# verification
+if len(arr) != len(tasks):
+    print("something has gone wrong -- the number of tasks being tracked and the number of tasks that have been logged are different")
+    print(f"Len of arr: {len(arr)}")
+    print(f"Len of tasks: {len(tasks)}")
+    raise Exception(':<')
 
+daily_h_to_print = []
 
-# process last night's results + update the "count"
-mem.insert(0, ('', '', '')) # padding to make indices easier
-
-countdx = -1 # countindex for the two upper lists
-for idx in range(len(mem)):
-    if idx == 0 or idx == 6 or idx == 7:
-        continue # untracked; filler + habits f/g
-
-    countdx += 1
-
-    if exclam_ramp_up[countdx] == 0:
-        mem[idx][2] = str(exclam_baseline[countdx])
+for i, v in enumerate(tasks):
+    # see if task first needs to be done 
+    if 1 in arr[i][:task_freq[i] - 1]:
+        # since the task was done within <task_freq days 
+        # we can skip the task
+        # yay
         continue 
 
-    _last = 0
-    if 'x' not in mem[idx][1]:
-        _last = 8 
-    else:
-        _last = mem[idx][1].find('x')
+    # task needs to be added
+    # how many exclams?
+    _last = arr[i].index(1) if 1 in arr[i] else len(arr[i])
+    _exclams = _last // exclam_ramp_up[i]
 
-    mem[idx][2] = str(exclam_baseline[countdx] + _last // exclam_ramp_up[countdx])
+    daily_h_to_print.append(v + '!'*_exclams)
     continue 
 
-
-
-##################
-##################
-# print things to do
-mem.pop(0) # remove spacer
-
-exclam_final_list = [-1] # spacer for down there
-for _idx in range(len(mem)):
-    if int(mem[_idx][2]) < 0:
-        continue 
-    exclam_final_list.append(int(mem[_idx][2]))
+##########################
+# final output section
 
 clear()
+print()
+print()
+print()
 print(f'-------- (Boilerplate) Tasks to do ({get_day(0)[5:]}) --------')
 print()
-for _index in range(1, 7):
-    print(habits_to_upd[_index] + '!'*exclam_final_list[_index])
-
-print()
+# something something print a list full of everything
+# all habits with their exclam marks
+for line in daily_h_to_print:
+    print(line)
+    print()
+    continue 
 print('---------------------------------------------------')
+print()
+print()
 
-
-
-
-
-
-# write new memory to file
-
-# turns out this is useless as putting 'w' already basically deletes file 
-# whatevs
-os.remove('exmem.txt')
-with open('exmem.txt', 'w') as f:
-    # just write
-    for _ls in mem:
-        f.write(f'{_ls[0]} {_ls[1]} {_ls[2]}\n')
