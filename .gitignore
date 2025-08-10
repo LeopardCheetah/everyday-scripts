@@ -1,13 +1,7 @@
 # from time-tracker-2
 __pycache__/
+old_day_recaps/
 day_recaps/
-
-# this is my development file
-# essentially equivalent to time_tracker.py (but less refined)
-tscr.py
-
-# more development 
-tt_scr_devfile.py
 
 
 ###############

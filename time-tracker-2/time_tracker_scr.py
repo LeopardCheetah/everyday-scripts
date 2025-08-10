@@ -22,8 +22,6 @@ hour_offset = 2
 import time 
 import os
 
-# for those pulling from code base use this import
-# import tt
 import tscr as tt
 
 
