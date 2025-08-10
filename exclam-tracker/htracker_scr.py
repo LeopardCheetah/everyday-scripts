@@ -1,3 +1,15 @@
+# this part added 08/10/2025
+# htracker works before 08/10/2025 so now it's broken since i've updated some schemas
+# habit_progress.txt needs to be archived
+# parts of this need to be rewritten
+# can't do that rn so
+print('This file should not be used. It does not work with the new habit schema implemented 08/10/2025.')
+print('Please fix this file before using it.')
+quit()
+
+
+
+
 # write to habit_progress.txt
 # if this code fails maybe make a blank file called "habit_progress.txt" and proceed from there
 
