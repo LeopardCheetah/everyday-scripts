@@ -76,6 +76,7 @@ default_p  = [''] + [p_a, p_a2]  + [' '] + [p_b,  p_c,  p_c2, p_d,  p_e,  p_f,  
 for i, v in enumerate(default_lp):
     default_lp[i] = v + ' '
 
+# print(default_lp.index('  '), default_lp.index('   ')) -> 3, 11
 
 def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_section_enders):
     med_time = 5
@@ -90,7 +91,7 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
 
 
     # first batch of open-ended questions
-    while _c < default_lp.index(' '):
+    while _c < default_lp.index('  '):
         if _c == 2:
             # add meditation/reflection section that's built in to do stuff
             clear()
@@ -152,7 +153,8 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         print(_p[_c])
         _section_text.append(_p[_c])
 
-        while _in not in section_enders and _nl_counter < 3:          
+        _in = input(_lp[_c]).strip()
+        while _in not in section_enders and _nl_counter < 2:          
             _nl_counter = _nl_counter + 1 if _in == '' else 0
 
             _section_text.append(_lp[_c] + _in)
@@ -162,7 +164,6 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         to_write.append(_section_text)
         _c += 1 
         continue
-
 
 
     
@@ -175,11 +176,12 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
 
     clear()
     # one liner sections
-    while _c < default_lp.index('  '):
+    while _c < default_lp.index('   '):
         print(_p[_c])
         _in = input(_lp[_c]).strip()
         to_write.append([_p[_c], _lp[_c] + _in])
         _c += 1
+        print()
         continue 
 
 
@@ -196,7 +198,7 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         _section_text.append(_p[_c])
 
         _in = input(_lp[_c]).strip()
-        while _in not in section_enders and _nl_counter < 3:          
+        while _in not in section_enders and _nl_counter < 2:          
             _nl_counter = _nl_counter + 1 if _in == '' else 0
 
             _section_text.append(_lp[_c] + _in)
