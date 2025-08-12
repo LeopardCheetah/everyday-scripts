@@ -81,6 +81,7 @@ for i, v in enumerate(default_lp):
 def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_section_enders):
     med_time = 5
     refl_time = 7
+    outside_time = 10
 
     # everything to write
     to_write = []
@@ -95,24 +96,24 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         if _c == 2:
             # add meditation/reflection section that's built in to do stuff
             clear()
-            print('Would you like to meditate or just simply reflect (look out the window) today?')
-            _answer = input('[m/r] >> ').strip().lower()
+            print('Would you like to meditate (m), reflect (r), or go outside (o) today?')
+            _answer = input('[m/r/o] >> ').strip().lower()
 
-            while _answer not in ['m', 'r']:
+            while _answer not in ['m', 'r', 'o']:
                 print()
                 print('That was not a valid response!')
                 time.sleep(1)
 
                 print('Again, would you like to meditate or just simply reflect today?')
-                _answer = input('[m/r] >> ').strip().lower()
+                _answer = input('[m/r/o] >> ').strip().lower()
                 continue 
 
             # some config based on which one you chose
-            secs = 60*med_time if _answer == 'm' else 60*refl_time
+            secs = 60*med_time if _answer == 'm' else 60*refl_time if _answer == 'r' else 60*outside_time
             secs = min(secs, 999) # ensure secs < 1000
             secs = max(0, secs) # ensure non-negativity
 
-            word = 'meditating' if _answer == 'm' else 'reflecting'
+            word = 'meditating' if _answer == 'm' else 'reflecting' if _answer == 'r' else 'being outside'
 
 
             # ok do some terminal trickery kinda
@@ -155,10 +156,10 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
 
         _in = input(_lp[_c]).strip()
         while _in not in section_enders and _nl_counter < 2:          
-            _nl_counter = _nl_counter + 1 if _in == '' else 0
-
             _section_text.append(_lp[_c] + _in)
             _in = input(_lp[_c]).strip()
+
+            _nl_counter = _nl_counter + 1 if _in == '' else 0
             continue 
 
         to_write.append(_section_text)
@@ -198,11 +199,11 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         _section_text.append(_p[_c])
 
         _in = input(_lp[_c]).strip()
-        while _in not in section_enders and _nl_counter < 2:          
-            _nl_counter = _nl_counter + 1 if _in == '' else 0
-
+        while _in not in section_enders and _nl_counter < 2:
             _section_text.append(_lp[_c] + _in)
             _in = input(_lp[_c]).strip()
+            
+            _nl_counter = _nl_counter + 1 if _in == '' else 0
             continue 
 
         to_write.append(_section_text)
