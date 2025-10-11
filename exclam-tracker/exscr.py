@@ -69,7 +69,7 @@ arr = [[0 for __ in range(num_of_prev_days)] for _ in range(num_habits)]
 
 
 for day in range(num_of_prev_days, 0, -1): # n/n-1/.../1 days ago time tracking scripts
-    path = f'../time-tracker-2/day_recaps/{get_day(day)}.txt'
+    path = f'../time-tracker-2/day_recaps/{get_day(day)[:7]}/{get_day(day)}.txt'
 
     habs = ''
     try:
@@ -180,7 +180,6 @@ with open('exscr_memory.txt', 'r') as f:
         except:
             continue # ????            
 
-        print(_description, _v)
 
         if "last-timestamp:" in _description:
             last_timestamp = _v
@@ -202,8 +201,6 @@ with open('exscr_memory.txt', 'r') as f:
 pst_offset = -7
 _days_to_parse = (int(time.time() + pst_offset*60*60) // (24*60*60)) - (int(last_timestamp + pst_offset*60*60) // (24*60*60))
 
-print(_days_to_parse, poker_time, chess_time, last_timestamp)
-
 
 for d in range(_days_to_parse, 0, -1):
     # use time.localtime to get date
@@ -211,6 +208,9 @@ for d in range(_days_to_parse, 0, -1):
 
     _tt_file = get_day(d) + '.txt'
     # _tt_file = time.strftime('%Y-%m-%d.txt', time.localtime(time.time() - (d)*24*60*60))
+
+    # new addition!
+    _tt_file = _tt_file[:7] + r'/' + _tt_file
 
     # fetch file
     _ls = []
@@ -242,7 +242,7 @@ for d in range(_days_to_parse, 0, -1):
             else:
                 # parse both h and m
                 # WLOG its 2h5m not 5m2h
-                _base = 60*int(_s[:_s.index('h')]) + int(_s[_s.index('h') + 1:_x.index('m')])
+                _base = 60*int(_s[:_s.index('h')]) + int(_s[_s.index('h') + 1:_s.index('m')])
 
         except:
             pass
