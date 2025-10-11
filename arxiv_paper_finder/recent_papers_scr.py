@@ -7,11 +7,13 @@ import sys
 
 ################
 
-search_categories = ['math.HO', 'math.GM', 'cs.DS', 'cs.GT', 'cs.CC', 'cs.CR', 'math.NT']
+# removed: 'cs.DS'
+
+search_categories = ['math.HO', 'math.GM', 'cs.GT', 'cs.CC', 'cs.CR', 'math.NT', 'eess.SP', 'eess.SY']
 category_blacklist = ['math.AT', 'math.CT', 'math.GT', 'math.KT', 'math.OA', 'math.RT', 'math.SP']
 max_papers = 7
 base_link = 'https://export.arxiv.org/api/query'
-term_length, term_height = 120, 30 # defaults
+term_length, term_height = 120, 30 # defaults for terminal width/height
 
 ##################
 
@@ -248,7 +250,12 @@ for _cat in search_categories:
         # no response, don't care
         continue 
     
+    if len(new_papers) == 0:
+        papers_seen.append((_cat, _last_seen))
+        continue 
+
     papers_seen.append((_cat, new_papers[0][0]))
+    continue 
 
 try:
     os.remove('papers_seen.txt')

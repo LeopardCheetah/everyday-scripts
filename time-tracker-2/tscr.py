@@ -33,7 +33,7 @@ def clear(): # clears screen
 lp_a = '>>'
 
 lp_b = '->'
-lp_c = '->'
+lp_c = '>o>'
 lp_d = '-@>'
 lp_e = '+>'
 lp_f = '><>'
@@ -45,16 +45,19 @@ lp_y = '-[>'
 # p = prompt
 # these are the list of things I'M tracking
 # customize to ur liking
-p_a = 'What did you do today?\nDid you do a "big thing"?'
+p_a = 'What did you do today? -- Did you do a "big thing"?\nWhat mountains did you scale today?'
 p_a2 = 'Anything else come to mind about what happened today?'
 
-p_b = 'Semi-daily habit tracker tracking portion (e.g. 11234567, 346):'
-p_c = "Approx amount of time spent gaming/Amount of time 'wasted'? (e.g. 90m/90m)"
-p_c2 = 'How much time was spent on prog/ee?'
+p_b1 = 'Semi-daily habit tracker tracking portion (e.g. 11234567, 346):'
+p_b2 = "Approx amount of time spent gaming/Amount of time 'wasted'? (e.g. 90m/90m)"
+p_c1 = "How much time was spent on prog/ee?" # new: added
+p_c2 = "How much time was spent on poker?"
+p_c3 = "How much time was spent on math?"
+p_c4 = "How much time was spent on chess?"
 p_d = 'What time did you wake up today?'
-p_e = 'How much time/distance did you spend biking today? (e.g. 30m/4mi)'
-p_f = 'Mood (1-10)?'
-p_ft = 'Mood comments:'
+p_e = 'Biking/Walking time/distance? (e.g. 30m/4mi)'
+p_f1 = 'Mood (1-10)?'
+p_f2 = 'Mood comments:'
 
 p_w = 'How are you feeling currently? Worries/Anxieties/Happies/Thoughts~:'
 p_x = 'Anything going on tomorrow? Anything to kick to tomorrow?'
@@ -64,8 +67,9 @@ p_y = 'Anything else? (Misc.)'
 default_section_enders = ['n', 'next', 'next section']
 
 # [' ']/['  '] spacer to split one liners + frqs
-default_lp = [''] + [lp_a, lp_a] + [' '] + [lp_b, lp_c, lp_c, lp_d, lp_e, lp_f, lp_f] + ['  '] + [lp_w, lp_x, lp_y]
-default_p  = [''] + [p_a, p_a2]  + [' '] + [p_b,  p_c,  p_c2, p_d,  p_e,  p_f,  p_ft] + ['  '] + [p_w,  p_x,  p_y]
+# format: empty/frq1/smallqs/frq2
+default_lp = [''] + [lp_a, lp_a] + [' '] + [lp_b, lp_b, lp_c, lp_c, lp_c, lp_c, lp_d, lp_e, lp_f, lp_f] + ['  '] + [lp_w, lp_x, lp_y]
+default_p  = [''] + [p_a, p_a2]  + [' '] + [p_b1, p_b2, p_c1, p_c2, p_c3, p_c4, p_d,  p_e,  p_f1, p_f2] + ['  '] + [p_w,  p_x,  p_y]
 
 
 # ok i lied there's more user variables but i dont wanna kwargs this so go find them yourself
@@ -81,7 +85,9 @@ for i, v in enumerate(default_lp):
 def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_section_enders):
     med_time = 5
     refl_time = 7
-    outside_time = 10
+    wander_time = 10
+
+    max_nl_count = 3
 
     # everything to write
     to_write = []
@@ -96,54 +102,60 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         if _c == 2:
             # add meditation/reflection section that's built in to do stuff
             clear()
-            print('Would you like to meditate (m), reflect (r), or go outside (o) today?')
-            _answer = input('[m/r/o] >> ').strip().lower()
+            print('Would you like to meditate (m), reflect (r), or wander (w) today?')
+            _answer = input('[m/r/w] >> ').strip().lower()
 
-            while _answer not in ['m', 'r', 'o']:
+            while _answer not in ['m', 'r', 'w', 's']:
                 print()
                 print('That was not a valid response!')
                 time.sleep(1)
 
-                print('Again, would you like to meditate or just simply reflect today?')
-                _answer = input('[m/r/o] >> ').strip().lower()
+                print('Again, would you like to meditate, reflect, or wander today?')
+                _answer = input('[m/r/w] >> ').strip().lower()
                 continue 
-
+            
             # some config based on which one you chose
-            secs = 60*med_time if _answer == 'm' else 60*refl_time if _answer == 'r' else 60*outside_time
+            secs = 60*med_time if _answer == 'm' else 60*refl_time if _answer == 'r' else 60*wander_time
             secs = min(secs, 999) # ensure secs < 1000
             secs = max(0, secs) # ensure non-negativity
 
-            word = 'meditating' if _answer == 'm' else 'reflecting' if _answer == 'r' else 'being outside'
+            word = 'meditating' if _answer == 'm' else 'reflecting' if _answer == 'r' else 'wandering'
 
+            if _answer == 's':
+                to_write.append([f'<Time spent reflecting: 0s (skipped).>'])
+            else:
 
-            # ok do some terminal trickery kinda
-            clear()
-            print(f'Have fun {word}! :)')
-            print(f'(Note: Try not to look at the screen during this time -- close your eyes or look outside instead!)')
-            print()
+                _start_time = time.monotonic()
+                # ok do some terminal trickery kinda
+                clear()
+                print(f'Have fun {word}! :)')
+                print(f'(Note: Try not to look at the screen during this time -- close your eyes or look outside instead!)')
+                print()
 
-            # average buffer flush
-            print(f'Seconds remaining:', end='', flush=True)
-            print("% 4d"%secs, end='', flush=True)
-            time.sleep(1)
+                # average buffer flush
+                print(f'Seconds remaining:', end='', flush=True)
+                print("% 4d"%secs, end='', flush=True)
 
-            # display time left
-            for s in range(secs - 1, 0, -1):
-                # print(s)
+                _cur_time = time.monotonic()
+                while _cur_time - _start_time < secs: 
+                    time.sleep(1)
 
-                # move 4 left + clear then print with padding
+                    # display current time
+                    print('\033[4D\033[0J', end='', flush=True)
+                    print("% 4d"%(secs - (_cur_time - _start_time)), end='', flush=True) # will automatically round down to int. number of seconds
+                    _cur_time = time.monotonic()
+                    continue 
+
                 print('\033[4D\033[0J', end='', flush=True)
-                print("% 4d"%s, end='', flush=True)
-                time.sleep(1)
-                continue 
+                print("   None :)", flush=True)
+                print()
+                # block for input
+                _ = input('>> Press any key to continue.....')
 
-
-            print('\033[4D\033[0J', end='', flush=True)
-            print("   None :)", flush=True)
-            print()
-            # block for input
-            _ = input('>> Press any key to continue.....')
-            # continue on normally!
+                _end_time = time.monotonic()
+                _elapsed = _end_time - _start_time
+                to_write.append([f'<Time spent {word}: {_elapsed}s.>'])
+                # continue on normally!
 
 
 
@@ -155,7 +167,7 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         _section_text.append(_p[_c])
 
         _in = input(_lp[_c]).strip()
-        while _in not in section_enders and _nl_counter < 2:          
+        while _in not in section_enders and _nl_counter < max_nl_count:          
             _section_text.append(_lp[_c] + _in)
             _in = input(_lp[_c]).strip()
 
@@ -182,6 +194,11 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         _in = input(_lp[_c]).strip()
         to_write.append([_p[_c], _lp[_c] + _in])
         _c += 1
+
+        # to condense space
+        if _p[_c][:8] == 'How much' and _p[_c - 1][:8] == 'How much':
+            continue 
+
         print()
         continue 
 
@@ -199,7 +216,7 @@ def time_tracker_script(_lp=default_lp, _p=default_p, section_enders=default_sec
         _section_text.append(_p[_c])
 
         _in = input(_lp[_c]).strip()
-        while _in not in section_enders and _nl_counter < 2:
+        while _in not in section_enders and _nl_counter < max_nl_count:
             _section_text.append(_lp[_c] + _in)
             _in = input(_lp[_c]).strip()
             
