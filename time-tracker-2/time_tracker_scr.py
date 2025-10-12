@@ -26,8 +26,9 @@ import tscr as tt
 
 
 # get the day recap
-# to_write = tt.time_tracker_script()
-to_write = ['abc']
+to_write = tt.time_tracker_script()
+
+
 # format: YYYY-MM-DD
 d = time.strftime("%Y-%m-%d", time.localtime(time.time() - 60*60*hour_offset))
 
