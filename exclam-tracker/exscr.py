@@ -20,8 +20,8 @@ def contains(s, x):
     return False 
 
 # n = how many days ago do you want the date of 
-def get_day(n):
-    _d = time.strftime("%Y-%m-%d", time.localtime(time.time() - 24*60*60*n))
+def get_day(n, h_offset):
+    _d = time.strftime("%Y-%m-%d", time.localtime(time.time() - 24*60*60*n + h_offset*60*60))
     return _d
 
 # path = path to the script date thing;
@@ -52,6 +52,8 @@ num_of_prev_days = 7
 
 num_habits = 5 # manual count
 
+hour_offset = 2 # 10pm => next day
+
 
 
 # first row == first habit
@@ -69,7 +71,7 @@ arr = [[0 for __ in range(num_of_prev_days)] for _ in range(num_habits)]
 
 
 for day in range(num_of_prev_days, 0, -1): # n/n-1/.../1 days ago time tracking scripts
-    path = f'../time-tracker-2/day_recaps/{get_day(day)[:7]}/{get_day(day)}.txt'
+    path = f'../time-tracker-2/day_recaps/{get_day(day, hour_offset)[:7]}/{get_day(day, hour_offset)}.txt'
 
     habs = ''
     try:
@@ -98,7 +100,7 @@ for day in range(num_of_prev_days, 0, -1): # n/n-1/.../1 days ago time tracking 
     
     # now that proging/math are together...
     if contains(habs, 5):
-        arr[4][day - 1] = 1
+        arr[2][day - 1] = 1
 
     # last whatever's tt results have been tracked!
 
@@ -107,7 +109,7 @@ for day in range(num_of_prev_days, 0, -1): # n/n-1/.../1 days ago time tracking 
 ################
 # make these tasks more concrete
 tasks = [
-    "[Brush | Brush], Floss, Anki", 
+    "[Brush | Brush], Floss, (Anki)", 
     "Reading - 1 Chapter/2 RL Articles", 
     "proging (CP/Projects)/Mathing (Analysis/Comp. Math) - >45 min", 
     "Showering", 
@@ -116,7 +118,7 @@ tasks = [
 
 
 # 2 -> this should be done once every 2 days
-task_freq = [1, 1, 1, 2, 1]
+task_freq = [1, 1, 1, 2, 2]
 
 # default ramp up will just be for every 1 days something isn't done, add an exclam
 # x -> Code -> Code -> Code!
@@ -197,16 +199,28 @@ with open('exscr_memory.txt', 'r') as f:
 
 # manually convert to number of days missing
 # assumption: ex t is not gonna be run past 12am so like yeah
-# NOTE: this is meant to be run in PST (-7) so like there's an hour offset
-pst_offset = -7
-_days_to_parse = (int(time.time() + pst_offset*60*60) // (24*60*60)) - (int(last_timestamp + pst_offset*60*60) // (24*60*60))
+# NOTE: this is meant to be run in PST (-7/-8) so like there's an hour offset
+## fuck daylight savings.
+
+# assumption 2: ex t works between 8pm - 7:59 of the next day
+
+if int(time.time()) - int(last_timestamp) < 12*60*60:
+    print(int(last_timestamp), int(time.time()))
+    print("This script was run <12h ago. would you like to continue?\n[y] / [n]")
+    print()
+    _continuation = input('><> ').strip()
+    if not len(_continuation) or _continuation[0] != 'y':
+        quit()
+
+pst_offset = -8
+_days_to_parse = (int(time.time() + pst_offset*60*60 + 4*60*60) // (24*60*60)) - (int(last_timestamp + pst_offset*60*60) // (24*60*60))
 
 
 for d in range(_days_to_parse, 0, -1):
     # use time.localtime to get date
     # go from back to front
 
-    _tt_file = get_day(d) + '.txt'
+    _tt_file = get_day(d, hour_offset) + '.txt'
     # _tt_file = time.strftime('%Y-%m-%d.txt', time.localtime(time.time() - (d)*24*60*60))
 
     # new addition!
@@ -214,12 +228,33 @@ for d in range(_days_to_parse, 0, -1):
 
     # fetch file
     _ls = []
-    with open('../time-tracker-2/day_recaps/' + _tt_file, 'r') as f:
-        _ls = f.readlines()
+    try:
+        with open('../time-tracker-2/day_recaps/' + _tt_file, 'r') as f:
+            _ls = f.readlines()
+    except FileNotFoundError as e:
+        print()
+        print('Warning!!!')
+        print('########################################')
+        print('unexpected error happened when trying to parse past day recaps (line ~220)')
+        print('Perhaps you forgot to do last night\'s tt recap?')
+        print()
+        print(f'day, file_name: {d}, {_tt_file}')
+        print()
+        raise e
+    except Exception as e:
+        print()
+        print('Warning!!!')
+        print('########################################')
+        print('unexpected error happened when trying to parse past day recaps (line ~220)')
+        print(f'day, file_name: {d}, {_tt_file}')
+        print()
+        raise e
 
 
     # hardcoded
     _prompts = ['How much time was spent on prog/ee?\n', 'How much time was spent on poker?\n', 'How much time was spent on math?\n', 'How much time was spent on chess?\n']
+    chess_time_delta = 0
+    poker_time_delta = 0
     for _i, _p in enumerate(_prompts):
         _base = 90 if _i % 2 else 0
         _s = ''
@@ -236,7 +271,8 @@ for d in range(_days_to_parse, 0, -1):
                 # parse BEFORE the h
                 # so things like 2h5 -> 2h
                 # maybe
-                _base = 60*int(_s[:_s.index('h')])
+                _base = int(60*float(_s[:_s.index('h')]))
+                # print(float(_s[:_s.index('h')]), float(_s[:_s.index('h')])*60)
             elif 'h' not in _s:
                 _base = int(_s[:_s.index('m')])
             else:
@@ -261,21 +297,40 @@ for d in range(_days_to_parse, 0, -1):
         # i = 1 -> poker
         # i = 2 -> math
         # i = 3 -> chess
+
+        # note: if there's extra time, divide that by 2 and add to running total
+
         if _i == 0: 
-            chess_time += ((_base + 1) // 2) # round up the time
+            poker_time_delta += _base # round up the time
             continue 
         if _i == 1:
-            poker_time -= _base
+            poker_time_delta -= _base
             continue
         if _i == 2:
-            poker_time += ((_base + 1) // 2)
+            chess_time_delta += _base
             continue 
         if _i == 3:
-            chess_time -= _base
+            chess_time_delta -= _base
             continue
 
         continue
 
+    # delta updates
+    
+    # nerfs
+    neg_delta_factor = 1.0
+    pos_delta_factor = 0.75
+
+    if poker_time_delta < 0:
+        poker_time += int(poker_time_delta*neg_delta_factor)
+    else:
+        poker_time += int(poker_time_delta*pos_delta_factor)
+    
+    if chess_time_delta < 0:
+        chess_time += int(chess_time_delta*neg_delta_factor)
+    else:
+        chess_time += int(chess_time_delta*pos_delta_factor)
+        
     # done!
 
 # done!
@@ -302,7 +357,7 @@ with open('exscr_memory.txt', 'w') as f:
 clear()
 print()
 print()
-print(f'-------- (Boilerplate) Tasks to do ({get_day(0)[5:]}) --------')
+print(f'-------- (Boilerplate) Tasks to do ({get_day(0, hour_offset)[5:]}) --------')
 print()
 # something something print a list full of everything
 # all habits with their exclam marks
@@ -320,4 +375,10 @@ print(f'Available chess time: \t {chess_time}m')
 print()
 print('---------------------------------------------------')
 print()
+print()
+
+print(r"Aim for 2-3 hours of prog/mathing (working!) each day.")
+print(r"/// And why not just Anki now? ///")
+
+print('\n\n')
 

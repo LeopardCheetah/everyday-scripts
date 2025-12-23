@@ -57,4 +57,8 @@ with open(path, "w") as f:
         f.write('--------------------------------------' + '\n')
         for _l in _ls:
             f.write(_l + '\n')
+
+
+print()
+print()
 print('done!')

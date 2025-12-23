@@ -45,7 +45,7 @@ lp_y = '-[>'
 # p = prompt
 # these are the list of things I'M tracking
 # customize to ur liking
-p_a = 'What did you do today? -- Did you do a "big thing"?\nWhat mountains did you scale today?'
+p_a = 'What did you do today? -- Did you do a "big thing"?\nWhat mountains did you scale today?\nIf you didn\'t finish everything you set out to do today, why not?\n'
 p_a2 = 'Anything else come to mind about what happened today?'
 
 p_b1 = 'Semi-daily habit tracker tracking portion (e.g. 11234567, 346):'
