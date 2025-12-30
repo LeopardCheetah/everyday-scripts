@@ -58,6 +58,7 @@ p_d = 'What time did you wake up today?'
 p_e = 'Biking/Walking time/distance? (e.g. 30m/4mi)'
 p_f1 = 'Mood (1-10)?'
 p_f2 = 'Mood comments:'
+p_g = "Name one thing you're greatful for. (Have gratitude towards.)"
 
 p_w = 'How are you feeling currently? Worries/Anxieties/Happies/Thoughts~:'
 p_x = 'Anything going on tomorrow? Anything to kick to tomorrow?'
@@ -68,8 +69,8 @@ default_section_enders = ['n', 'next', 'next section']
 
 # [' ']/['  '] spacer to split one liners + frqs
 # format: empty/frq1/smallqs/frq2
-default_lp = [''] + [lp_a, lp_a] + [' '] + [lp_b, lp_b, lp_c, lp_c, lp_c, lp_c, lp_d, lp_e, lp_f, lp_f] + ['  '] + [lp_w, lp_x, lp_y]
-default_p  = [''] + [p_a, p_a2]  + [' '] + [p_b1, p_b2, p_c1, p_c2, p_c3, p_c4, p_d,  p_e,  p_f1, p_f2] + ['  '] + [p_w,  p_x,  p_y]
+default_lp = [''] + [lp_a, lp_a] + [' '] + [lp_b, lp_b, lp_c, lp_c, lp_c, lp_c, lp_d, lp_e, lp_f, lp_f, lp_a] + ['  '] + [lp_w, lp_x, lp_y]
+default_p  = [''] + [p_a, p_a2]  + [' '] + [p_b1, p_b2, p_c1, p_c2, p_c3, p_c4, p_d,  p_e,  p_f1, p_f2, p_g] + ['  '] + [p_w,  p_x,  p_y]
 
 
 # ok i lied there's more user variables but i dont wanna kwargs this so go find them yourself

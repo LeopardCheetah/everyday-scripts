@@ -18,6 +18,12 @@ habit_progress.txt
 # from arxiv papers
 
 scr.py
-
 # note: papers_seen.txt i've assumed remains unchanged
-# i get annoyed of the yellow dot so i do this so no yellow dot
+
+
+############
+# from weekly review
+
+# things i note down about my life
+wr_log.txt
+wr_todos.txt
