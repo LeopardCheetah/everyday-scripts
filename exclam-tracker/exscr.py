@@ -52,7 +52,7 @@ num_of_prev_days = 7
 
 num_habits = 5 # manual count
 
-hour_offset = 2 # 10pm => next day
+hour_offset = 0 # 11pm => next day
 
 
 
@@ -171,9 +171,19 @@ poker_time = 0
 chess_time = 0
 last_timestamp = 0
 
+old_data = []
 # parse input 
 with open('exscr_memory.txt', 'r') as f:
+    old_data = f.readlines()
+
+with open('exscr_memory.txt', 'r') as f:
+    c = 0
     for _line in f:
+        c += 1
+
+        # only read the night before's ex t
+        if c == 4:
+            break 
         _description, _v = '', ''
         try:
             _description, _v = _line.strip().split() # should be 2 parts
@@ -219,6 +229,7 @@ _days_to_parse = (int(time.time() + pst_offset*60*60 + 4*60*60) // (24*60*60)) -
 for d in range(_days_to_parse, 0, -1):
     # use time.localtime to get date
     # go from back to front
+
 
     _tt_file = get_day(d, hour_offset) + '.txt'
     # _tt_file = time.strftime('%Y-%m-%d.txt', time.localtime(time.time() - (d)*24*60*60))
@@ -344,7 +355,9 @@ for d in range(_days_to_parse, 0, -1):
 with open('exscr_memory.txt', 'w') as f:
     f.write(f'last-timestamp: {int(time.time())}\n')
     f.write(f'poker-prog {poker_time}\n')
-    f.write(f'chess-math {chess_time}')
+    f.write(f'chess-math {chess_time}\n')
+    f.write('\n')
+    f.write(''.join(old_data))
 
 
 
@@ -379,6 +392,7 @@ print()
 
 print(r"Aim for 2-3 hours of prog/mathing (working!) each day.")
 print(r"/// And why not just Anki now? ///")
+print(r"Maybe try meditating for a little bit right now.")
 
 print('\n\n')
 

@@ -152,9 +152,18 @@ if __name__ == '__main__':
         ('https://sive.rs/kimo', 'There is No Speed Limit (Sivers)'),
         ('https://academics.hamilton.edu/documents/themundanityofexcellence.pdf', 'Mundanity of Excellence (Chambliss)'),  
         ('https://mindingourway.com/rest-in-motion/', 'Rest in Motion (Soares)')
+        ('', '[Anything] from Hell Yeah or No (Sivers)')
     ]
 
-    wr, todo, date = weekly_review(questions, readings)
+    wr, todo, date = '', '', ''
+
+    try:
+        wr, todo, date = weekly_review(questions, readings)
+    except EOFError:
+        # probably ctrl z'd
+        print()
+        print('Ctrl + z, exiting....')
+        quit()
 
 
     # append wr to top
